@@ -30,7 +30,9 @@ public class ExpenseService {
     private Expense mapToEntity(ExpenseDTO expenseDTO) throws ParseException {
         Expense expense = modelMapper.map(expenseDTO, Expense.class);
         // expenseId 유니크 문자열 입력 (자바 유틸 UUID 사용)
-        expense.setExpenseId(UUID.randomUUID().toString());
+        if(expenseDTO.getId() == null) {
+            expense.setExpenseId(UUID.randomUUID().toString());
+        }
         // 문자열날짜 => 날짜 변환
         expense.setDate(DateTimeUtil.convertStringToDate(expenseDTO.getDateString()));
         return expense;
@@ -49,7 +51,7 @@ public class ExpenseService {
     public ExpenseDTO saveExpense(ExpenseDTO expenseDTO) throws ParseException {
         //1. DTO => Entity
         Expense expense = mapToEntity(expenseDTO);
-        //2. DB에 저장
+        //2. DB에 저장 (id 있을경우에는 업데이트)
         expense = expRepo.save(expense);
         //3. Entity => DTO
         return mapToDTO(expense);
@@ -57,15 +59,19 @@ public class ExpenseService {
 
     //삭제 서비스
     public void deleteExpense(String expenseId) {
-        Expense expense = expRepo.findByExpenseId(expenseId)
-                .orElseThrow(()-> new RuntimeException("해당 ID의 아이템을 찾을수 없습니다."));
+        Expense expense = getExpenseById(expenseId);
         expRepo.delete(expense); //삭제하기
+    }
+
+    //리팩토링
+    private Expense getExpenseById(String expenseId) {
+        return expRepo.findByExpenseId(expenseId)
+                .orElseThrow(() -> new RuntimeException("해당 ID의 아이템을 찾을수 없습니다."));
     }
 
     //expenseId로 수정할 expense를 찾아 DTO 로 리턴
     public ExpenseDTO getExpense(String expenseId) {
-        Expense expense = expRepo.findByExpenseId(expenseId)
-                .orElseThrow(()->new RuntimeException("ID를 찾을수 없음."));
+        Expense expense = getExpenseById(expenseId);
         ExpenseDTO expenseDTO  = mapToDTO(expense);
         //날짜를 => Form 입력시 날짜는 2024-5-06
         expenseDTO.setDateString(DateTimeUtil.convertDateToInput(expense.getDate()));
