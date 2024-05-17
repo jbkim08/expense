@@ -23,6 +23,7 @@
       <td th:text="${exp.description}"></td>
       <td th:text="${exp.amount}"></td>
       <td th:text="${exp.date.toLocaleString()}"></td>
+      <td th:text="${#dates.format(exp.date,'yyyy-MM-dd')  }"></td>
     </tr>
   </tbody>
 </table>
