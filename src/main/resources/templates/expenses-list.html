@@ -8,6 +8,10 @@
 <body>
 <h1>비용 리스트</h1>
 <hr />
+<form th:action="@{/filterExpenses}" method="get" th:object="${filter}">
+  키워드 검색 : <input type="text" th:field="*{keyword}" placeholder="키워드 입력">
+  <input type="submit" value="검색">
+</form>
 <div>
   <a th:href="@{/createExpense}">새 비용</a>
 </div>

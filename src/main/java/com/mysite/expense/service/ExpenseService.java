@@ -78,4 +78,11 @@ public class ExpenseService {
         return expenseDTO;
     }
 
+    //키워드 검색 결과 리스트
+    public List<ExpenseDTO> getFilterExpenses(String keyword){
+        List<Expense> list = expRepo.findByNameContaining(keyword);
+        return list.stream().map((exp)-> mapToDTO(exp))
+                .collect(Collectors.toList());
+    }
+
 }

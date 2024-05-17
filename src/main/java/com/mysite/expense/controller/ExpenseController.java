@@ -1,6 +1,7 @@
 package com.mysite.expense.controller;
 
 import com.mysite.expense.dto.ExpenseDTO;
+import com.mysite.expense.dto.ExpenseFilterDTO;
 import com.mysite.expense.service.ExpenseService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class ExpenseController {
     @GetMapping("/expenses")
     public String showExpenseList(Model model) {
         model.addAttribute("expenses", expService.getAllExpenses());
+        model.addAttribute("filter", new ExpenseFilterDTO());
         return "expenses-list";
     }
 
