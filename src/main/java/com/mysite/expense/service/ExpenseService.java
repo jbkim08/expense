@@ -55,4 +55,21 @@ public class ExpenseService {
         return mapToDTO(expense);
     }
 
+    //삭제 서비스
+    public void deleteExpense(String expenseId) {
+        Expense expense = expRepo.findByExpenseId(expenseId)
+                .orElseThrow(()-> new RuntimeException("해당 ID의 아이템을 찾을수 없습니다."));
+        expRepo.delete(expense); //삭제하기
+    }
+
+    //expenseId로 수정할 expense를 찾아 DTO 로 리턴
+    public ExpenseDTO getExpense(String expenseId) {
+        Expense expense = expRepo.findByExpenseId(expenseId)
+                .orElseThrow(()->new RuntimeException("ID를 찾을수 없음."));
+        ExpenseDTO expenseDTO  = mapToDTO(expense);
+        //날짜를 => Form 입력시 날짜는 2024-5-06
+        expenseDTO.setDateString(DateTimeUtil.convertDateToInput(expense.getDate()));
+        return expenseDTO;
+    }
+
 }

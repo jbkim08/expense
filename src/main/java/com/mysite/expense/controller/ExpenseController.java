@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -39,5 +40,21 @@ public class ExpenseController {
         System.out.println("입력한 expenseDTO = " + expenseDTO);
         expService.saveExpense(expenseDTO);
         return "redirect:/expenses";
+    }
+
+    //삭제하기
+    @GetMapping("/deleteExpense")
+    public String deleteExpense(@RequestParam("id") String expenseId) {
+        System.out.println("삭제 번호: " + expenseId);
+        expService.deleteExpense(expenseId);
+        return "redirect:/expenses";
+    }
+
+    //수정페이지 보이기
+    @GetMapping("/updateExpense")
+    public String updateExpense(@RequestParam("id") String expenseId, Model model) {
+        System.out.println("업데이트 아이템 : " + expenseId);
+        model.addAttribute("expense", expService.getExpense(expenseId));
+        return "expense-form";
     }
 }
