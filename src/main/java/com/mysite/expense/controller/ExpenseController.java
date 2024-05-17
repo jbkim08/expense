@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -23,5 +25,17 @@ public class ExpenseController {
     public String showExpenseList(Model model) {
         model.addAttribute("expenses", expService.getAllExpenses());
         return "expenses-list";
+    }
+
+    @GetMapping("/createExpense")
+    public String createExpense(Model model) {
+        model.addAttribute("expense", new ExpenseDTO());
+        return "expense-form";
+    }
+
+    @PostMapping("/saveOrUpdateExpense")
+    public String saveOrUpdateExpense(@ModelAttribute("expense") ExpenseDTO expenseDTO) {
+        System.out.println("입력한 expenseDTO = " + expenseDTO);
+        return "redirect:/expenses";
     }
 }
