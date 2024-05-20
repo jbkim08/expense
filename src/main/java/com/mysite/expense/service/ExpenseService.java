@@ -87,9 +87,9 @@ public class ExpenseService {
         String sortBy = expenseFilterDTO.getSortBy();
         String startString = expenseFilterDTO.getStartDate();
         String endString = expenseFilterDTO.getEndDate();
-        //시작일과 종료일을 sql 날짜로 변환
-        Date startDay = DateTimeUtil.convertStringToDate(startString);
-        Date endDay = DateTimeUtil.convertStringToDate(endString);
+        //시작일과 종료일을 sql 날짜로 변환 (만약 없으면 최초일부터 현재까지 적용)
+        Date startDay = !startString.isEmpty() ? DateTimeUtil.convertStringToDate(startString) : new Date(0);
+        Date endDay = !endString.isEmpty() ? DateTimeUtil.convertStringToDate(endString) : new Date(System.currentTimeMillis());
 
         List<Expense> list = expRepo.findByNameContainingAndDateBetween(keyword,startDay,endDay);
         List<ExpenseDTO> fillterList = list.stream()
