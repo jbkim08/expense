@@ -1,6 +1,7 @@
 package com.mysite.expense.service;
 
 import com.mysite.expense.dto.ExpenseDTO;
+import com.mysite.expense.dto.ExpenseFilterDTO;
 import com.mysite.expense.entity.Expense;
 import com.mysite.expense.repository.ExpenseRepository;
 import com.mysite.expense.util.DateTimeUtil;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,8 +82,16 @@ public class ExpenseService {
     }
 
     //키워드 검색 결과 리스트
-    public List<ExpenseDTO> getFilterExpenses(String keyword, String sortBy){
-        List<Expense> list = expRepo.findByNameContaining(keyword);
+    public List<ExpenseDTO> getFilterExpenses(ExpenseFilterDTO expenseFilterDTO) throws ParseException {
+        String keyword = expenseFilterDTO.getKeyword();
+        String sortBy = expenseFilterDTO.getSortBy();
+        String startString = expenseFilterDTO.getStartDate();
+        String endString = expenseFilterDTO.getEndDate();
+        //시작일과 종료일을 sql 날짜로 변환
+        Date startDay = DateTimeUtil.convertStringToDate(startString);
+        Date endDay = DateTimeUtil.convertStringToDate(endString);
+
+        List<Expense> list = expRepo.findByNameContainingAndDateBetween(keyword,startDay,endDay);
         List<ExpenseDTO> fillterList = list.stream()
                 .map((exp)->mapToDTO(exp))
                 .collect(Collectors.toList());
