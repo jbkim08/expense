@@ -9,5 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ExpenseFilterDTO {
 
-    private String keyword;
+    private String keyword; //검색어
+
+    private String sortBy; //정렬
 }

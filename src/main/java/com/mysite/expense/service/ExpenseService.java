@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -79,10 +80,27 @@ public class ExpenseService {
     }
 
     //키워드 검색 결과 리스트
-    public List<ExpenseDTO> getFilterExpenses(String keyword){
+    public List<ExpenseDTO> getFilterExpenses(String keyword, String sortBy){
         List<Expense> list = expRepo.findByNameContaining(keyword);
-        return list.stream().map((exp)-> mapToDTO(exp))
+        List<ExpenseDTO> fillterList = list.stream()
+                .map((exp)->mapToDTO(exp))
                 .collect(Collectors.toList());
+        //정렬방법에 따라서 정렬하기
+        if(sortBy.equals("date")){
+            fillterList.sort(((o1, o2) -> o2.getDate().compareTo(o1.getDate())));
+        } else {
+            fillterList.sort(((o1, o2) -> o2.getAmount().compareTo(o1.getAmount())));
+        }
+        return fillterList;
     }
+
+    //총 비용 계산하기
+    public Long totalExpenses(List<ExpenseDTO> list) {
+        Long sum = list.stream()
+                .mapToLong(ExpenseDTO::getAmount)
+                .sum();
+        return sum;
+    }
+
 
 }
