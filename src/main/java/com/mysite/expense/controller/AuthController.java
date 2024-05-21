@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
+
 @Controller
 @RequiredArgsConstructor
 public class AuthController {
@@ -20,8 +22,11 @@ public class AuthController {
 
     //로그인 화면 보여주기
     @GetMapping({"/login", "/"})
-    public String showLoginPage() {
-       return "login";
+    public String showLoginPage(Principal principal) {
+        if(principal == null) {
+            return "login";
+        }
+       return "redirect:/expenses";
     }
 
     //가입하기 화면 보여주기

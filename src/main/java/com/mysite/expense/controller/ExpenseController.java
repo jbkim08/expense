@@ -3,6 +3,7 @@ package com.mysite.expense.controller;
 import com.mysite.expense.dto.ExpenseDTO;
 import com.mysite.expense.dto.ExpenseFilterDTO;
 import com.mysite.expense.service.ExpenseService;
+import com.mysite.expense.util.DateTimeUtil;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class ExpenseController {
     public String showExpenseList(Model model) {
         List<ExpenseDTO> list = expService.getAllExpenses();
         model.addAttribute("expenses", list);
-        model.addAttribute("filter", new ExpenseFilterDTO());
+        model.addAttribute("filter", new ExpenseFilterDTO(DateTimeUtil.getCurrentMonthStartDate(), DateTimeUtil.getCurrentMonthDate()));
         Long total = expService.totalExpenses(list);
         model.addAttribute("total", total);
         return "expenses-list";

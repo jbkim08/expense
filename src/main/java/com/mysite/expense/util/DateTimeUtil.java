@@ -3,6 +3,8 @@ package com.mysite.expense.util;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class DateTimeUtil {
 
@@ -24,6 +26,20 @@ public class DateTimeUtil {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         java.util.Date utilDate = sdf.parse(dateString);
         return new Date(utilDate.getTime());
+    }
+
+    //이번달 첫일 2024-05-01
+    public static String getCurrentMonthStartDate(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate today = LocalDate.now();
+        return today.withDayOfMonth(1).format(formatter);
+    }
+
+    //현재 날짜 2024-05-21
+    public static String getCurrentMonthDate(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate today = LocalDate.now();
+        return today.format(formatter);
     }
 
 }
