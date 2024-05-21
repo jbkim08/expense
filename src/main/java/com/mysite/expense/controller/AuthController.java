@@ -42,6 +42,6 @@ public class AuthController {
         }
         uService.save(user);
         model.addAttribute("successMsg", true);
-        return "login";
+        return "response";
     }
 }

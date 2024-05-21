@@ -8,10 +8,6 @@
 <body>
 <h1>로그인</h1>
 <hr />
-<div th:if="${successMsg}">
-    <h1>가입성공!</h1>
-    <p>가입해주셔서 감사합니다. 이제 당신의 비용관리를 시작하세요!</p>
-</div>
 <div>
     <form th:action="@{/login}" method="post" id="loginForm">
         <div th:if="${param.error}">잘못된 이메일 또는 패스워드 입니다</div>
@@ -22,6 +18,7 @@
         <br><br>
         <button type="submit">로그인</button>
     </form>
+    <a th:href="@{/register}">가입하기</a>
 </div>
 <!--자바스크립트 링크-->
 <script th:src="@{/js/jquery.js}"></script>

@@ -4,6 +4,7 @@ import com.mysite.expense.dto.ExpenseDTO;
 import com.mysite.expense.dto.ExpenseFilterDTO;
 import com.mysite.expense.entity.Expense;
 import com.mysite.expense.entity.User;
+import com.mysite.expense.exception.ExpenseNotFoundException;
 import com.mysite.expense.repository.ExpenseRepository;
 import com.mysite.expense.util.DateTimeUtil;
 import lombok.RequiredArgsConstructor;
@@ -73,7 +74,7 @@ public class ExpenseService {
     //리팩토링
     private Expense getExpenseById(String expenseId) {
         return expRepo.findByExpenseId(expenseId)
-                .orElseThrow(() -> new RuntimeException("해당 ID의 아이템을 찾을수 없습니다."));
+                .orElseThrow(() -> new ExpenseNotFoundException("해당 ID의 아이템을 찾을수 없습니다 : " + expenseId));
     }
 
     //expenseId로 수정할 expense를 찾아 DTO 로 리턴
@@ -95,7 +96,9 @@ public class ExpenseService {
         Date startDay = !startString.isEmpty() ? DateTimeUtil.convertStringToDate(startString) : new Date(0);
         Date endDay = !endString.isEmpty() ? DateTimeUtil.convertStringToDate(endString) : new Date(System.currentTimeMillis());
 
-        List<Expense> list = expRepo.findByNameContainingAndDateBetween(keyword,startDay,endDay);
+        User user = userService.getLoggedInUser();
+
+        List<Expense> list = expRepo.findByNameContainingAndDateBetweenAndUserId(keyword,startDay,endDay, user.getId());
         List<ExpenseDTO> fillterList = list.stream()
                 .map((exp)->mapToDTO(exp))
                 .collect(Collectors.toList());
