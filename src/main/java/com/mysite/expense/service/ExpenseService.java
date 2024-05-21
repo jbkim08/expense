@@ -3,6 +3,7 @@ package com.mysite.expense.service;
 import com.mysite.expense.dto.ExpenseDTO;
 import com.mysite.expense.dto.ExpenseFilterDTO;
 import com.mysite.expense.entity.Expense;
+import com.mysite.expense.entity.User;
 import com.mysite.expense.repository.ExpenseRepository;
 import com.mysite.expense.util.DateTimeUtil;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,8 @@ public class ExpenseService {
 
     //모든 비용 DTO 리스트를 가져오는 서비스
     public List<ExpenseDTO> getAllExpenses() {
-        List<Expense> list = expRepo.findAll(); //엔티티 리스트
+        User user = userService.getLoggedInUser(); //로그인 유저를 가져옴
+        List<Expense> list = expRepo.findByUserId(user.getId()); //유저의 비용가져오기
         List<ExpenseDTO> listDTO = list.stream()
                 .map((expense) -> mapToDTO(expense))
                 .collect(Collectors.toList());
